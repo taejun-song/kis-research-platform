@@ -1,18 +1,19 @@
-import requests
 from datetime import datetime
-from settings import BASE_URL, AUTH_TOKEN, APP_KEY, APP_SECRET
 
 import pandas as pd
+import requests
+from settings import APP_KEY, APP_SECRET, AUTH_TOKEN, BASE_URL
 
 
 def historical_OHLCV(
     stock_code: str, start_date: str, end_date: str, period: str, adjusted: str
-):
+) -> pd.DataFrame | None:
     """
     :param stock_code: code of a stock eg) '005930' in general, 'Q500001' for ETN
     :param start_date: the initial date("YYYYMMDD") to look up eg) "20240909"
     :param end_date: the last date("YYYYMMDD") to look up eg) "20240910"
-    :param period: "D" : daily candlesticks, "W": weekly candlesticks, "M": monthly candlesticks, "Y": yearly candlesticks
+    :param period: "D" : daily candlesticks, "W": weekly candlesticks,
+    "M": monthly candlesticks, "Y": yearly candlesticks
     :param adjusted: "0" if adjusted else "1"
 
     :return: dict
@@ -49,16 +50,16 @@ def historical_OHLCV(
     if res.status_code == 200 and res.json()["rt_cd"] == "0":
         daily_ohlcv = dict()
         for daily_data in res.json()["output2"]:
-            date, o, h, l, c, v = map(
+            date, open, high, low, close, volume = map(
                 lambda key: int(daily_data[key]),
                 filter(lambda k: k in daily_data, DOHLCV),
             )
             daily_ohlcv[datetime.strptime(str(date), "%Y%m%d")] = {
-                "o": o,
-                "h": h,
-                "l": l,
-                "c": c,
-                "v": v,
+                "o": open,
+                "h": high,
+                "l": low,
+                "c": close,
+                "v": volume,
             }
         return pd.DataFrame(daily_ohlcv).T.sort_index()
     else:

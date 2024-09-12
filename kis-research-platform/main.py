@@ -1,8 +1,9 @@
 import csv
 import datetime
 from typing import Annotated
-import typer
+
 import settings
+import typer
 from auth import auth
 
 app = typer.Typer()

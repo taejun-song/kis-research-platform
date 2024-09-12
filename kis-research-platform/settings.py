@@ -1,6 +1,7 @@
 from pathlib import Path
-from decouple import config
+
 import typer
+from decouple import config
 
 
 def recent_access_token() -> str:
