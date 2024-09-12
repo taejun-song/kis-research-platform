@@ -19,8 +19,8 @@ def recent_access_token() -> str:
 
 APP_NAME = "kis-research-platform"
 APP_DIR = typer.get_app_dir(APP_NAME)
-APP_KEY = config("APP_KEY")
-APP_SECRET = config("APP_SECRET")
+APP_KEY = str(config("APP_KEY"))
+APP_SECRET = str(config("APP_SECRET"))
 BASE_URL = "https://openapi.koreainvestment.com:9443"  # Actual account
 AUTH_CSV_PATH = Path(APP_DIR) / "auth.csv"
 AUTH_CSV_PATH.parent.mkdir(exist_ok=True, parents=True)
