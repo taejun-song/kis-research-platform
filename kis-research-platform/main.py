@@ -3,6 +3,7 @@ import datetime
 from typing import Annotated
 import typer
 import settings
+from auth import auth
 
 app = typer.Typer()
 
@@ -35,7 +36,7 @@ def login(
     except (ValueError, FileNotFoundError):
         with open(settings.AUTH_CSV_PATH, "a+") as f:
             writer = csv.writer(f)
-            auth_response = kis.auth()
+            auth_response = auth()
             authenticated_at = datetime.datetime.now()
             revoked_at = authenticated_at + datetime.timedelta(days=1)
             writer.writerow(
